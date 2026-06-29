@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>築空間 · 標準設計參考</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#181b22; --line:#2a2f3a; --ink:#e7eaf0; --sub:#9aa3b2;
+    --accent:#5b9dff; --hi:#3ddc97; --med:#f3c969; --low:#ff7b7b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  header{padding:18px 24px;border-bottom:1px solid var(--line);background:var(--panel)}
+  header h1{margin:0;font-size:20px}
+  header .sub{color:var(--sub);font-size:13px;margin-top:4px}
+  .banner{background:#332a13;color:#f3c969;padding:8px 24px;font-size:13px;border-bottom:1px solid var(--line)}
+  .wrap{display:flex;min-height:calc(100vh - 120px)}
+  nav{width:180px;border-right:1px solid var(--line);padding:16px 0;background:var(--panel)}
+  nav button{display:block;width:100%;text-align:left;padding:10px 24px;background:none;border:none;
+             color:var(--sub);font-size:15px;cursor:pointer;border-left:3px solid transparent}
+  nav button:hover{color:var(--ink);background:#20242d}
+  nav button.active{color:var(--ink);background:#20242d;border-left-color:var(--accent);font-weight:600}
+  nav .cat{padding:6px 24px;color:#5c6473;font-size:11px;letter-spacing:1px;margin-top:10px}
+  main{flex:1;padding:24px;overflow:auto}
+  .search{margin-bottom:16px}
+  .search input{width:100%;max-width:420px;padding:10px 14px;border-radius:8px;border:1px solid var(--line);
+                background:#0c0e12;color:var(--ink);font-size:15px}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  th{color:var(--sub);font-weight:600;font-size:12px;letter-spacing:.5px;position:sticky;top:0;background:var(--bg)}
+  td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+  .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700}
+  .b-high{background:rgba(61,220,151,.15);color:var(--hi)}
+  .b-med{background:rgba(243,201,105,.15);color:var(--med)}
+  .b-low{background:rgba(255,123,123,.15);color:var(--low)}
+  .src{font-size:11px;color:var(--sub)}
+  .note{color:var(--sub);font-size:12px}
+  .legend{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--sub)}
+  .legend b{color:var(--ink)}
+  .rec{color:var(--hi);font-weight:700}
+  .empty{color:var(--sub);padding:40px;text-align:center}
+</style>
+</head>
+<body>
+<header>
+  <h1>築空間 · 標準設計參考</h1>
+  <div class="sub">輸入空間 → 查標準尺寸／配置規則。每條皆標來源與信心等級，結果固定一致。</div>
+</header>
+<div class="banner" id="banner"></div>
+<div class="wrap">
+  <nav id="nav"></nav>
+  <main>
+    <div class="search"><input id="q" type="search" placeholder="搜尋規則項目（例如：走道、馬桶、檯面高度）…"></div>
+    <div id="content"></div>
+    <div class="legend" id="legend"></div>
+  </main>
+</div>
+
+<script>
+let DB=null, current=null;
+
+function badge(c){
+  const m={high:['b-high','高'],med:['b-med','中'],low:['b-low','待覆核']};
+  const [cls,txt]=m[c]||['b-med','—'];
+  return `<span class="badge ${cls}">${txt}</span>`;
+}
+function fmtRange(r){
+  const u=r.unit||'';
+  const parts=[];
+  if(r.min!=null) parts.push(`下限 ${r.min}`);
+  if(r.rec!=null) parts.push(`<span class="rec">建議 ${r.rec}</span>`);
+  if(r.max!=null) parts.push(`上限 ${r.max}`);
+  return parts.join(' / ') + (u?` ${u}`:'');
+}
+function renderNav(){
+  const nav=document.getElementById('nav');
+  const cats=[...new Set(DB.spaces.map(s=>s.category))];
+  let html='';
+  cats.forEach(cat=>{
+    html+=`<div class="cat">${cat}</div>`;
+    DB.spaces.filter(s=>s.category===cat).forEach(s=>{
+      html+=`<button data-id="${s.id}">${s.name}</button>`;
+    });
+  });
+  nav.innerHTML=html;
+  nav.querySelectorAll('button').forEach(b=>b.onclick=()=>select(b.dataset.id));
+}
+function select(id){
+  current=id;
+  document.getElementById('q').value='';
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.id===id));
+  renderTable();
+}
+function rowsFor(filter){
+  let rows=[];
+  DB.spaces.forEach(s=>{
+    s.rules.forEach(r=>{
+      const hay=(s.name+r.item+(r.note||'')).toLowerCase();
+      if(filter){ if(hay.includes(filter)) rows.push({s,r}); }
+      else if(s.id===current){ rows.push({s,r}); }
+    });
+  });
+  return rows;
+}
+function renderTable(){
+  const q=document.getElementById('q').value.trim().toLowerCase();
+  const rows=rowsFor(q);
+  const showSpaceCol=!!q;
+  const c=document.getElementById('content');
+  if(!rows.length){ c.innerHTML='<div class="empty">查無符合的規則</div>'; return; }
+  let html='<table><thead><tr>'+
+    (showSpaceCol?'<th>空間</th>':'')+
+    '<th>項目</th><th>數值</th><th>來源</th><th>信心</th><th>備註</th></tr></thead><tbody>';
+  rows.forEach(({s,r})=>{
+    html+='<tr>'+
+      (showSpaceCol?`<td>${s.name}</td>`:'')+
+      `<td>${r.item}</td>`+
+      `<td class="num">${fmtRange(r)}</td>`+
+      `<td class="src">${r.source}</td>`+
+      `<td>${badge(r.confidence)}</td>`+
+      `<td class="note">${r.note||''}</td>`+
+    '</tr>';
+  });
+  html+='</tbody></table>';
+  c.innerHTML=html;
+}
+function renderLegend(){
+  const srcs=Object.entries(DB.meta.sources).map(([k,v])=>`<b>${k}</b>=${v}`).join('　·　');
+  document.getElementById('legend').innerHTML=
+    `信心：${badge('high')} 廣泛採用且穩定　${badge('med')} 依情境變動　${badge('low')} 待覆核<br><br>來源：${srcs}`;
+  document.getElementById('banner').textContent=
+    `v${DB.meta.version}（更新 ${DB.meta.updated}）— ${DB.meta.status}`;
+}
+document.getElementById('q').addEventListener('input',renderTable);
+
+fetch('data/standards.json').then(r=>r.json()).then(db=>{
+  DB=db; renderNav(); renderLegend();
+  if(DB.spaces.length) select(DB.spaces[0].id);
+}).catch(e=>{
+  document.getElementById('content').innerHTML=
+    '<div class="empty">讀不到 data/standards.json（請用本機伺服器開啟，勿直接雙擊 file://）</div>';
+});
+</script>
+</body>
+</html>

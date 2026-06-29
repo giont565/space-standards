@@ -1,0 +1,87 @@
+{
+  "meta": {
+    "version": "0.1-seed",
+    "updated": "2026-06-29",
+    "status": "種子資料，待權威源逐條覆核 + 圖片萃取擴充",
+    "note": "每條規則皆標來源(source)與信心(confidence)。confidence=high 為廣泛採用且穩定的標準；med 為依情境變動；low 為待覆核。production 使用前請逐條對照原始來源。",
+    "sources": {
+      "TBR": "建築技術規則 建築設計施工編（內政部營建署）",
+      "NEUFERT": "Neufert 建築設計資料集成 (Architects' Data)",
+      "BFA": "建築物無障礙設施設計規範（內政部）",
+      "ERGO": "人因工程／通用人體尺寸"
+    }
+  },
+  "spaces": [
+    {
+      "id": "kitchen",
+      "name": "廚房",
+      "category": "住宅",
+      "rules": [
+        {"item": "單排工作走道淨寬", "min": 90, "rec": 100, "max": 120, "unit": "cm", "note": "兩人需錯身者建議 ≥120", "source": "NEUFERT", "confidence": "high"},
+        {"item": "雙排（中島）走道淨寬", "min": 100, "rec": 120, "max": 130, "unit": "cm", "note": "需同時開抽屜/櫃門時取大值", "source": "NEUFERT", "confidence": "high"},
+        {"item": "流理台檯面高度", "min": 80, "rec": 85, "max": 90, "unit": "cm", "note": "概估 = 使用者身高 ÷ 2 + 5", "source": "ERGO", "confidence": "high"},
+        {"item": "檯面深度", "min": 55, "rec": 60, "max": 65, "unit": "cm", "source": "NEUFERT", "confidence": "high"},
+        {"item": "吊櫃底緣距檯面", "min": 50, "rec": 55, "max": 60, "unit": "cm", "source": "ERGO", "confidence": "high"},
+        {"item": "工作三角總長（冰箱-水槽-爐）", "min": 360, "rec": 480, "max": 660, "unit": "cm", "note": "三邊總和；單邊 120–270cm", "source": "NEUFERT", "confidence": "high"}
+      ]
+    },
+    {
+      "id": "bathroom",
+      "name": "衛浴",
+      "category": "住宅",
+      "rules": [
+        {"item": "馬桶中心線距側牆/障礙", "min": 38, "rec": 45, "max": null, "unit": "cm", "source": "NEUFERT", "confidence": "high"},
+        {"item": "馬桶前緣淨空", "min": 60, "rec": 70, "max": null, "unit": "cm", "source": "NEUFERT", "confidence": "high"},
+        {"item": "洗手台檯面高度", "min": 80, "rec": 82, "max": 85, "unit": "cm", "source": "ERGO", "confidence": "high"},
+        {"item": "淋浴間最小尺寸", "min": 90, "rec": 100, "max": null, "unit": "cm", "note": "正方淨內尺寸 90×90 為下限", "source": "NEUFERT", "confidence": "high"},
+        {"item": "浴缸標準尺寸", "min": 150, "rec": 160, "max": 170, "unit": "cm", "note": "長度；寬 70–75", "source": "NEUFERT", "confidence": "med"},
+        {"item": "無障礙廁所迴轉直徑", "min": 150, "rec": 150, "max": null, "unit": "cm", "source": "BFA", "confidence": "low"}
+      ]
+    },
+    {
+      "id": "dining",
+      "name": "餐廳",
+      "category": "住宅",
+      "rules": [
+        {"item": "每人用餐檯面寬", "min": 60, "rec": 70, "max": null, "unit": "cm", "note": "深度 ≥40cm／人", "source": "NEUFERT", "confidence": "high"},
+        {"item": "餐桌離牆（座位後可走動）", "min": 90, "rec": 100, "max": null, "unit": "cm", "source": "NEUFERT", "confidence": "high"},
+        {"item": "餐桌離牆（僅入座、不走動）", "min": 75, "rec": 80, "max": null, "unit": "cm", "source": "NEUFERT", "confidence": "high"},
+        {"item": "餐桌高度", "min": 72, "rec": 74, "max": 76, "unit": "cm", "source": "ERGO", "confidence": "high"},
+        {"item": "椅面高度", "min": 43, "rec": 45, "max": 47, "unit": "cm", "note": "與桌面差尺 28–32cm", "source": "ERGO", "confidence": "high"}
+      ]
+    },
+    {
+      "id": "bedroom",
+      "name": "主臥",
+      "category": "住宅",
+      "rules": [
+        {"item": "建議最小面積（含衣櫃+走動）", "min": 10, "rec": 12, "max": null, "unit": "m2", "source": "NEUFERT", "confidence": "med"},
+        {"item": "床側走道淨寬", "min": 70, "rec": 90, "max": null, "unit": "cm", "source": "NEUFERT", "confidence": "high"},
+        {"item": "床尾淨空（需開衣櫃門）", "min": 90, "rec": 100, "max": null, "unit": "cm", "source": "NEUFERT", "confidence": "high"},
+        {"item": "衣櫃深度（吊掛）", "min": 55, "rec": 60, "max": null, "unit": "cm", "source": "ERGO", "confidence": "high"},
+        {"item": "雙人床尺寸（標準/Queen）", "min": 150, "rec": 152, "max": 180, "unit": "cm", "note": "寬；長 186–200", "source": "ERGO", "confidence": "high"}
+      ]
+    },
+    {
+      "id": "circulation",
+      "name": "走道／動線",
+      "category": "通用",
+      "rules": [
+        {"item": "住宅主走道淨寬", "min": 90, "rec": 100, "max": null, "unit": "cm", "source": "NEUFERT", "confidence": "high"},
+        {"item": "住宅次走道淨寬", "min": 75, "rec": 80, "max": null, "unit": "cm", "source": "NEUFERT", "confidence": "high"},
+        {"item": "室內門扇淨寬", "min": 80, "rec": 90, "max": null, "unit": "cm", "note": "無障礙通路淨寬 ≥90、門淨 ≥80", "source": "BFA", "confidence": "med"},
+        {"item": "居室天花板淨高", "min": 210, "rec": 240, "max": null, "unit": "cm", "note": "建築技術規則居室淨高下限；待覆核條號", "source": "TBR", "confidence": "low"}
+      ]
+    },
+    {
+      "id": "stairs",
+      "name": "樓梯",
+      "category": "通用",
+      "rules": [
+        {"item": "住宅樓梯及平台寬度", "min": 75, "rec": 90, "max": null, "unit": "cm", "note": "建築技術規則 §33 依用途分級；待覆核確切數字", "source": "TBR", "confidence": "low"},
+        {"item": "住宅級高（每階）", "min": null, "rec": 18, "max": 20, "unit": "cm", "source": "TBR", "confidence": "low"},
+        {"item": "住宅級深（每階）", "min": 21, "rec": 24, "max": null, "unit": "cm", "source": "TBR", "confidence": "low"}
+      ]
+    }
+  ]
+}
