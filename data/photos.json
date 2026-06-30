@@ -1,14 +1,49 @@
 {
-  "_note": "材質包：每個空間一組可切換的照片層。把真實照片放進 data/photos/ 後在此登錄即可。建議照片角度與對應向量視圖（平面/立面）一致，疊起來才對得準。",
+  "_note": "材質包：可商用/可重散佈的真實照片（Openverse 來源）。把自己的照片放進 data/photos/ 也可在此登錄。",
   "kitchen": [
-    {"id": "wood",  "name": "木質暖色", "src": "data/photos/kitchen-wood.svg"},
-    {"id": "white", "name": "白色簡約", "src": "data/photos/kitchen-white.svg"}
+    {
+      "id": "p1",
+      "name": "木質暖色",
+      "src": "data/photos/kitchen-1.jpg",
+      "by": "Paintzen",
+      "license": "by 2.0",
+      "source": "https://www.flickr.com/photos/147489968@N06/29300385324"
+    },
+    {
+      "id": "p2",
+      "name": "白色簡約",
+      "src": "data/photos/kitchen-2.jpg",
+      "by": "NeONBRAND neonbrand",
+      "license": "cc0 1.0",
+      "source": "https://commons.wikimedia.org/w/index.php?curid=61880111"
+    }
   ],
   "bathroom": [
-    {"id": "tile",  "name": "藍灰磁磚", "src": "data/photos/bathroom-tile.svg"},
-    {"id": "stone", "name": "石材",     "src": "data/photos/bathroom-stone.svg"}
+    {
+      "id": "p1",
+      "name": "現代衛浴",
+      "src": "data/photos/bathroom-1.jpg",
+      "by": "Nenad Stojkovic",
+      "license": "by 2.0",
+      "source": "https://commons.wikimedia.org/w/index.php?curid=116757501"
+    },
+    {
+      "id": "p2",
+      "name": "磁磚衛浴",
+      "src": "data/photos/bathroom-2.jpg",
+      "by": "Elsie esq.",
+      "license": "by 2.0",
+      "source": "https://www.flickr.com/photos/61132483@N00/3878943067"
+    }
   ],
   "dining": [
-    {"id": "warm",  "name": "暖木",     "src": "data/photos/dining-warm.svg"}
+    {
+      "id": "p1",
+      "name": "餐廳",
+      "src": "data/photos/dining-1.jpg",
+      "by": "YellowstoneNPS",
+      "license": "pdm 1.0",
+      "source": "https://www.flickr.com/photos/80223459@N05/9408598631"
+    }
   ]
 }

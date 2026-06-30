@@ -66,6 +66,8 @@
         border-radius:14px;cursor:pointer;font-size:13px}
   .chip:hover{color:var(--ink)}
   .chip.active{background:#20242d;color:var(--ink);border-color:var(--hi)}
+  .credit{color:#5c6473;font-size:11px;margin-top:6px}
+  .credit a{color:var(--sub)}
   .wall{fill:none;stroke:#5b6b86;stroke-width:3}
   .fix{fill:#1b2430;stroke:#3a4a63;stroke-width:1.5}
   .fix-label{fill:#9aa3b2;font-size:12px}
@@ -126,6 +128,8 @@ function renderNav(){
 }
 function select(id){
   current=id; curView=null;
+  const pack=PHOTOS[id]||[];
+  curPhoto=pack.length?pack[0].id:'__none__';
   document.getElementById('q').value='';
   document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.id===id));
   renderDiagram();
@@ -160,8 +164,10 @@ function renderDiagram(){
     ? `<div class="vec-layer diagram ${annoOn?'':'hide-anno'}" style="opacity:${vecOpacity/100}">${views.find(v=>v.id===curView).svg()}</div>`
     : `<div class="vec-layer" style="min-height:300px"></div>`;
 
+  const credit=photo
+    ? `<div class="credit">照片：${photo.by||'Unknown'} · ${photo.license||''} · <a href="${photo.source}" target="_blank" rel="noopener">來源</a></div>` : '';
   host.innerHTML=`<div class="diag-bar">${angleTabs}${photoChips}${annoTog}${vecSlider}${photoSlider}</div>
-    <div class="stage">${photoLayer}${vecLayer}</div>`;
+    <div class="stage">${photoLayer}${vecLayer}</div>${credit}`;
 
   host.querySelectorAll('.vtab').forEach(b=>b.onclick=()=>{curView=b.dataset.v;renderDiagram();});
   host.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{curPhoto=b.dataset.p;renderDiagram();});
